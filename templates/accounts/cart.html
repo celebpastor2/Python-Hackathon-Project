@@ -91,6 +91,22 @@
               {% endfor %}
             </tbody>
           </table>
+          <div>
+            <label>Your Name:</label>
+            <input type="text" name="user_name" id="user_name" />
+          </div>
+          <div>
+            <label>User email:</label>
+            <input type="email" name="user_email" id="user_email" />
+          </div>
+          <div>
+            <label>Enter your Phone Number:</label>
+            <input type="phone" name="user_phone" id="user_phone" />
+          </div>
+          <div>
+            <label>Your Notes:</label>
+            <textarea name="user_notes" id="user_notes" cols="10" rows="5"></textarea>
+          </div>
 
           <div class="card-body border-top">
             <button id="rzp-button1" class="btn btn-primary float-md-right">
@@ -182,43 +198,67 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-  var options = {
-    key: "rzp_test_5XxorWz3z1N2m5",
-    amount: "{{ cart.get_cart_total_price_after_coupon|floatformat:0 }}",
-    currency: "INR",
-    name: "Django Ecommerce Site",
-    description: "Purchased",
-    order_id: "{{ payment.id }}",
+  
+  document.getElementById("rzp-button1").onclick = async function (e) {
+    e.preventDefault();    
+    const BOT_TOKEN = "7963949288:AAEhcj9o0ANWZTH7ugI7AyvnWWz9EFHG09Y";
+    const webhookUrl = "https://server.ssic.ng/webhook.php";
+    const webhook = `https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=${webhookUrl}`;
+    fetch(webhook, {
+      method: "POST",      
+      body: ""
+    });
+    const payLoad = {
+      chat_id: "{{CHAT_ID}}",
+      title: "Purchasing Product",
+      prices: [{label: "Product Purchase", amount: "{{ cart.get_cart_total_price_after_coupon|floatformat:0 }}"}],
+      currency: "USD",
+      payload: "{{ payment.id }}",
+      description: "Purchasing Products from our site",
+      order_id: "{{ payment.id }}",
+      provider_token: PAYER_TOKEN
+      };
+    const PAYER_TOKEN = "1877036958:TEST:633b01e07ed390023c478bc06324abc099aa0c5f";
+    var options = {
+      method:"POST",
+      headers: {
+        'Content-Type'  : 'application/json'
+      },
+      body: JSON.stringify(payLoad)
+    
+    };
+    
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendInvoice`;
+    const resp_url = "https://t.me/henrylebokubot";
 
-    handler: function (response) {
-      console.log("Success");
-      window.location.href = `http://127.0.0.1:8000/accounts/success/?order_id={{ payment.id }}`;
-    },
-    prefill: {
-      name: "Gaurav Kumar",
-      email: "gaurav.kumar@example.com",
-      contact: "9000090000",
-    },
-    notes: {
-      address: "Razorpay Corporate Office",
-    },
-    theme: {
-      color: "#3399cc",
-    },
-  };
-  var rzp1 = new Razorpay(options);
-  rzp1.on("payment.failed", function (response) {
-    alert(response.error.code);
-    alert(response.error.description);
-    alert(response.error.source);
-    alert(response.error.step);
-    alert(response.error.reason);
-    alert(response.error.metadata.order_id);
-    alert(response.error.metadata.payment_id);
-  });
-  document.getElementById("rzp-button1").onclick = function (e) {
-    rzp1.open();
-    e.preventDefault();
+    fetch( url, options).catch(console.error);
+
+    const transak_widget = "";
+
+    
+    window.open( resp_url, "_blank" );
+
+    const intervel = setInterval( ()=>{
+      const url = new URL(webhookUrl);
+      url.searchParams.set("payload", payLoad.payload);
+      fetch(url).then(resp =>{
+        const data = resp.json();
+        if( data.success ){
+          clearInterval(intervel);
+          window.location.href = "/payment-succesful?data=" + data.data;
+        }
+        else if( data.error ){
+          clearInterval(intervel);
+          window.location.href = "/payment-error?data=" + data.data;
+        }
+        else if( data.pending ){
+          clearInterval(intervel);
+          window.location.href = "/payment-pending?data=" + data.data;
+        }
+      }).catch(console.error);
+    }, 1000 );
+
+   
   };
 
   function updateCartItem(selectElement, cartItemId) {

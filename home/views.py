@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def index(request):
+    return "Something"
     query = Product.objects.all()
     categories = Category.objects.all()
     selected_sort = request.GET.get('sort')
