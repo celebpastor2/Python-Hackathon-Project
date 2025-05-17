@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <main>
+        <div class="profile-main">
+            <div class="profilePics"></div>
+            <div class="profileInfo"></div>
+            <div class="profileFooter"></div>
+        </div>
+    </main>
+</body>
+<script>
+    const telegram = window.Telegram.WebApp;
+    telegram.expand();
+
+    telegram.MainButton.setText("Buy Now");
+    telegram.MainButton.show();
+
+    telegram.MainButton.onClick(()=>{
+        telegram.sendData("user_is_buying_items")
+    });
+</script>
+</html>
+
+
