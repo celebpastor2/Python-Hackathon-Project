@@ -23,6 +23,6 @@ async def message(update: Update, context: ContextTypes.DEFAULT_TYPE ) :
 
 app = ApplicationBuilder().token("YOUR TOKEN HERE").build()
 
-app.add_handler(CommandHandler("hello", hello))
+app.add_handler(CommandHandler("start", hello))
 
 app.run_polling()

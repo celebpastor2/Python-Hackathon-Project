@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'products',
     'accounts',
     'home',
+    'telegram_bot'
 
     # Django Social Auth Configurations
     'django.contrib.sites',

@@ -80,6 +80,7 @@ def register_page(request):
 
         profile = Profile.objects.get(user=user_obj)
         profile.email_token = str(uuid.uuid4())
+        profile.telegram_token = str(uuid.uuid1())[0:10]
         profile.save()
         activation_link = f'http://127.0.0.1:8000/accounts/activate/{profile.email_token}'
         #send_account_activation_email(email, profile.email_token)
@@ -101,8 +102,9 @@ def activate_email_account(request, email_token):
         user = Profile.objects.get(email_token=email_token)
         user.is_email_verified = True
         user.save()
-        messages.success(request, 'Account verification successful.')
-        return redirect('login')
+        messages.success(request, f'Account verification successful. You will be redirected to Our Telegram Bot, Please click on Start Button to Complete your registeration and provide the following token {user.telegram_token}')
+
+        return redirect('https://t.me/henrylebokubot')
     except Exception as e:
         return HttpResponse('Invalid email token.')
 
