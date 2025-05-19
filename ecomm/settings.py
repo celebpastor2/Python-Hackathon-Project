@@ -23,7 +23,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = '$xt-n$(v4!uso6^60%7#34or+b=emigxg)9y8vzf*@tf=%0)ws'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0/0', 'localhost', '127.0.0.1']
 
@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'products',
     'accounts',
     'home',
-    'telegram_bot'
+    'telegram_bot',
 
     # Django Social Auth Configurations
     'django.contrib.sites',
@@ -199,7 +199,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "public/media")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "public")]
 
 # Media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'public/media')

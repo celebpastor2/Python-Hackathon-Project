@@ -18,7 +18,7 @@ prices = [LabeledPrice(label=title, amount=500)]
 user_chat_id = ""
 
 
-bot.send_invoice(chat_id=user_chat_id,title=title, description=description,payload=payload,provider_token=PAYMENT_PROVIDER_TOKEN, currency=currency,prices=prices, start_parameter="Buy Now")
+#bot.send_invoice(chat_id=user_chat_id,title=title, description=description,payload=payload,provider_token=PAYMENT_PROVIDER_TOKEN, currency=currency,prices=prices, start_parameter="Buy Now")
 
 def start(update: Update, context: CallbackContext):
     keyboard = [

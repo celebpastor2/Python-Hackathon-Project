@@ -72,20 +72,22 @@ def register_page(request):
         if user_obj.exists():
             messages.info(request, 'Username or email already exists!')
             return HttpResponseRedirect(request.path_info)
-
-        user_obj = User.objects.create(
-            username=username, first_name=first_name, last_name=last_name, email=email)
-        user_obj.set_password(password)
-        user_obj.save()
-
-        profile = Profile.objects.get(user=user_obj)
-        profile.email_token = str(uuid.uuid4())
-        profile.telegram_token = str(uuid.uuid1())[0:10]
-        profile.save()
-        activation_link = f'http://127.0.0.1:8000/accounts/activate/{profile.email_token}'
-        #send_account_activation_email(email, profile.email_token)
-        messages.success(request, f'You can activate your account by clicking on this <a href="{activation_link}">link</a>. ')
-        return HttpResponseRedirect(request.path_info)
+        try :
+            user_obj = User.objects.create(
+                username=username, first_name=first_name, last_name=last_name, email=email)
+            user_obj.set_password(password)
+            user_obj.save()
+        except:
+            pass
+        finally :
+            profile = Profile.objects.get(user=user_obj)
+            profile.email_token = str(uuid.uuid4())
+            profile.telegram_token = str(uuid.uuid1())[0:10]
+            profile.save()
+            activation_link = f'http://127.0.0.1:8000/accounts/activate/{profile.email_token}'
+            #send_account_activation_email(email, profile.email_token)
+            messages.success(request, f'You can activate your account by clicking on this <a href="{activation_link}">link</a>. ')
+            return HttpResponseRedirect(request.path_info)
 
     return render(request, 'accounts/register.html')
 
